@@ -1,4 +1,4 @@
-all: main.c list.c 
+list: main.c list.c 
 	gcc -g main.c list.c -o list.o
 
 clean:
