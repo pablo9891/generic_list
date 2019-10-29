@@ -14,6 +14,11 @@ struct list {
 	int size;
 	void (*free)(void **);
 	void *(*cpy)(void *);
+	/*
+ 	 *	if priority(a) < priority(b) returns 1
+ 	 *	else returns < -1
+ 	 */
+	int (*cmp)(void *, void *);
 };
 
 /*
@@ -24,7 +29,7 @@ extern void process_element(struct list *list, void proc(void *));
 /*
  * Create a list
  * */
-extern struct list *create_list(void (*free)(void **), void *(*cpy)(void *));
+extern struct list *create_list(void (*free)(void **), void *(*cpy)(void *), int (*cmp)(void *, void *));
 
 /*
  * Creates a new node
@@ -79,7 +84,7 @@ extern int clean(struct list *list);
 /*
  * Destroy list when free
  * */
-static void destroy_list(struct node **node);
+extern void destroy_list(struct node **node);
 
 /*
  * Free all the list
@@ -90,5 +95,11 @@ extern void free_list(struct list **list);
  * Checks if list is empty
  * */
 extern int is_empty(struct list *list);
+
+/*
+ * Will always return 0 
+ *
+ * */
+static int default_cmp(void *a, void *b);
 
 #endif

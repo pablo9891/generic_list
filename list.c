@@ -10,7 +10,7 @@ static struct node *create_node(void *data, void *(*cpy)(void*))
 		return tmp_node;
 }
 
-struct list *create_list(void (*free)(void **), void *(*cpy)(void *)) 
+extern struct list *create_list(void (*free)(void **), void *(*cpy)(void *), int (*cmp)(void *, void *)) 
 {
 		struct list *tmp;
 
@@ -18,6 +18,11 @@ struct list *create_list(void (*free)(void **), void *(*cpy)(void *))
 
 		tmp->free = free;
 		tmp->cpy = cpy;
+		if(cmp != NULL) {
+			tmp->cmp = cmp;
+		} else {
+			tmp->cmp = default_cmp;
+		}
 		tmp->header = NULL;
 		tmp->tail = NULL;
 		tmp->size = 0;
@@ -27,18 +32,26 @@ struct list *create_list(void (*free)(void **), void *(*cpy)(void *))
 
 extern int push(struct list *list, void *data) 
 {
-		struct node *tmp;
+		struct node *new_node, **tmp;
 
 		if (!list) 
 				return 0;
 		
-		tmp = create_node(data, list->cpy);
-		tmp->next = list->header;
+		new_node = create_node(data, list->cpy);
 
-		if (!list->header)
-				list->tail = tmp;
+		tmp = &(list->header);
 
-		list->header = tmp;
+		while((*tmp) != NULL && list->cmp(data, (*tmp)->data) > 0) {
+  				tmp = &(*tmp)->next;
+		}	
+
+		new_node->next = (*tmp);
+
+		if (!(*tmp))
+				list->tail = new_node;
+
+		(*tmp) = new_node;
+
 		list->size++;
 
 		return 1;
@@ -202,7 +215,7 @@ extern int remove_element(struct list *list)
 		return 0;
 }
 
-static void destroy_list(struct node **node)
+extern void destroy_list(struct node **node)
 {
 		struct node **tmp;
 		struct node *tmp1;
@@ -256,4 +269,9 @@ extern int is_empty(struct list *list)
 				return 1;
 
 		return list->size == 0;
+}
+
+static int default_cmp(void *a, void *b)
+{
+		return 0;
 }
