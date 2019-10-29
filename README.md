@@ -9,7 +9,7 @@ By using void pointers C allows to create a list of values and treat it like an 
 * Priority queue 
 
 # Build
-* make list
+* make
 
 # Author
 * Pablo Pellecchia
