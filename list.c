@@ -273,5 +273,5 @@ extern int is_empty(struct list *list)
 
 static int default_cmp(void *a, void *b)
 {
-		return 0;
+		return -1;
 }

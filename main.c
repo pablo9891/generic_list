@@ -93,10 +93,10 @@ void test1()
 
 		free_list(&list);
 }
-/*
+
 void test2()
 {
-		struct priority_list *list = pl_create(free, cpy_int, cmp);
+		struct list *list = create_list(free, cpy_int, NULL);
 		
 		int a = 10;
 		int b = 14;
@@ -105,21 +105,21 @@ void test2()
 		int e = 8;
 		int f = 9;
 
-		pl_add(list, &a);
-		pl_add(list, &b);
-		pl_add(list, &c);
-		pl_add(list, &d);
-		pl_add(list, &e);
-		pl_add(list, &f);
+		push(list, &a);
+		push(list, &b);
+		push(list, &c);
+		push(list, &d);
+		push(list, &e);
+		push(list, &f);
 
-		printf("The size is %d \n", pl_size(list));
+		printf("The size is %d \n", size(list));
 
-		pl_process_element(list, show_element);
-}*/
+		process_element(list, show_element);
+}
 
 int main(int argc, const char **argv)
 {
-	test1();
+	test2();
 
 	return 0;
 }
