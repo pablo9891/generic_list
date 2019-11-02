@@ -1,7 +1,62 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "list.h"
+
+enum priority {
+	LOW,
+	MEDIUM,
+	HIGH
+};
+
+struct emergency {
+	enum priority prior;
+};
+
+int *cpy_priority(const void *arg1) 
+{
+		struct emergency *emergency;
+
+		if (arg1 == NULL)
+				return NULL;
+
+		emergency = (struct emergency *)malloc(sizeof(struct emergency));
+		emergency->prior = ((struct emergency *)arg1)->prior;
+
+		return emergency;
+}
+
+int fn_cmp_prior(const void *arg1, const void *arg2) 
+{
+		struct emergency *data1 = (struct emergency*)arg1;
+		struct emergency *data2 = (struct emergency*)arg2;
+
+		if(data1->prior < data2->prior)
+				return -1;
+
+		return 1;
+}
+
+void show_element_prior(void *data)
+{
+		struct emergency *d = (struct emergency *)data;
+		char txt[10];
+
+		switch(d->prior) {
+			case 0:
+				strcpy(txt, "LOW");
+				break;
+			case 1:
+				strcpy(txt, "MEDIUM");
+				break;
+			case 2:
+				strcpy(txt, "HIGH");
+				break;
+		}
+
+		printf("%s \n", txt);
+}
 
 int *cpy_int(const void *arg1) 
 {
@@ -117,9 +172,39 @@ void test2()
 		process_element(list, show_element);
 }
 
+void test3()
+{
+		struct list *list = create_list(free, cpy_priority, fn_cmp_prior);
+		
+		struct emergency *a, *b, *c, *d, *e, *f;
+
+		a = (struct emergency *)malloc(sizeof(struct emergency));
+		b = (struct emergency *)malloc(sizeof(struct emergency));
+		c = (struct emergency *)malloc(sizeof(struct emergency));
+		d = (struct emergency *)malloc(sizeof(struct emergency));
+		e = (struct emergency *)malloc(sizeof(struct emergency));
+		f = (struct emergency *)malloc(sizeof(struct emergency));
+
+		a->prior = HIGH;
+		b->prior = MEDIUM;
+		c->prior = HIGH;
+		d->prior = LOW;
+		e->prior = LOW;
+		f->prior = MEDIUM;
+
+		push(list, a);
+		push(list, b);
+		push(list, c);
+		push(list, d);
+		push(list, e);
+		push(list, f);
+
+		process_element(list, show_element_prior);
+}
+
 int main(int argc, const char **argv)
 {
-	test2();
+	test3();
 
 	return 0;
 }
